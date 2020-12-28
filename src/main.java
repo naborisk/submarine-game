@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class main {
 
-	public static final char[] LETTERS = {'A', 'B', 'C', 'D', 'E', 'F', 'G'};
+	public static final char[] LETTERS = {'-', 'A', 'B', 'C', 'D', 'E', '-'};
 
 	public static void print(int[][] a){
 		int i,j;
@@ -13,7 +13,8 @@ public class main {
 		for(i=0; i<7; i++){
 			for(j=0; j<7; j++){
 				if(a[i][j] == -1){
-					System.out.print(" ||| ");
+					if(j == 0 || j == a.length-1) System.out.print("  " + LETTERS[i] +"  ");
+					else System.out.print("  " + j +"  ");
 				}else if(a[i][j] > 0){
 					System.out.print("  " + a[i][j] + "  ");
 				}else{
@@ -143,6 +144,8 @@ public class main {
 		randomLocation(allies);
 		randomLocation(enemies);
 		totalHp = total(allies);
+
+		print(allies);
 		System.out.println("Input print, move, or attack");
 
 		while(sc.hasNextLine()){
