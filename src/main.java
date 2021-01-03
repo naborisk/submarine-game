@@ -3,7 +3,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
-public class main {
+public class Main {
 
 	public static final char[] LETTERS = {'-', 'A', 'B', 'C', 'D', 'E', '-'};
 
@@ -26,7 +26,62 @@ public class main {
 		
 	}
 	
-	public static int total(int[][] a){
+	public static void moveEquation(int moveEq[][], int totalHP, int numSub, int nextMove[][]){
+		for(int i=1; i<6; i++){
+			for(int j=1; j<6; j++){
+				moveEq[i][j] = (totalHP + numSub + nextMove[i][j]) / 2;
+			}
+		}
+	}
+	
+	public static void moveEquationAr(int moveEq[][], int m, int n, int totalHP, int numSub, int nextMove[][]){
+		
+		int[][] temArr = {
+				{-1, -1, -1, -1, -1, -1, -1},
+				{-1,  0,  0,  0,  0,  0, -1},
+				{-1,  0,  0,  0,  0,  0, -1},
+				{-1,  0,  0,  0,  0,  0, -1},
+				{-1,  0,  0,  0,  0,  0, -1},
+				{-1,  0,  0,  0,  0,  0, -1},
+				{-1, -1, -1, -1, -1, -1, -1},
+		};
+		
+		if(temArr[m+1][n+1] > -1) temArr[m+1][n+1] = 1;  
+		if(temArr[m+1][n] > -1) temArr[m+1][n] = 1;
+		if(temArr[m+1][n-1] > -1) temArr[m+1][n-1] = 1;
+		if(temArr[m][n+1] > -1) temArr[m][n+1] = 1;
+		if(temArr[m][n-1] > -1) temArr[m][n-1] = 1;
+		if(temArr[m-1][n+1] > -1) temArr[m-1][n+1] = 1;
+		if(temArr[m-1][n] > -1) temArr[m-1][n] = 1;
+		if(temArr[m-1][n-1] > -1) temArr[m-1][n-1] = 1;
+		
+		
+		for(int i=1; i<6; i++){
+			for(int j=1; j<6; j++){
+				if(m == i && n == j) moveEq[i][j] = 0;
+				else if(temArr[i][j] == 1){
+					moveEq[i][j] = totalHP + numSub + nextMove[i][j];
+				}else{
+					moveEq[i][j] = (totalHP + numSub + nextMove[i][j]) / 2;
+				}
+			}
+		}
+	}
+	
+	public static void _max(int a[][], int m, int n) { 
+		int max = a[0][0];
+		for(int i=1; i<6; i++){ 
+			for(int j=1; j<6; j++){ 
+				if(a[i][j] > max){
+					max = a[i][j]; 
+					m = i;
+					n = j;
+				}
+			}
+		}
+	}
+	
+	public static int total(int a[][]){
 		int sum = 0;
 		int i,j;
 		
@@ -38,37 +93,25 @@ public class main {
 		return sum;
 	}
 	
-	public static void randomLocation(int[][] a){
-		Random ran = new Random();
-		random r = new random();
+	public static int _num(int a[][]){
+		int num = 0;
+		int i,j;
 		
-		int firsti, firstj;
-		int secondi, secondj;
-		int thirdi, thirdj;
-		int fourthi, fourthj;
+		for(i=1; i<6; i++){
+			for(j=1; j<6; j++){
+				if(a[i][j] > 0){
+					num++;
+				};
+			}
+		}
 		
-		firsti = ran.nextInt(2)+1;
-		firstj = ran.nextInt(2)+1;
-		a[firsti][firstj] = 3;
-	
-		secondi = ran.nextInt(2)+1;
-		r.randomSecond(firsti, firstj, secondi);
-		secondj = r.getsecondj();
-		a[secondi][secondj] = 3;
-		
-		thirdj = ran.nextInt(3)+3;
-		r.randomThird(secondi, secondj, thirdj);
-		thirdi = r.getthirdi();
-		a[thirdi][thirdj] = 3;
-		
-		fourthi = ran.nextInt(2)+3;
-		r.randomFourth(thirdi, thirdj, fourthi);
-		fourthj = r.getfourthj();
-        if(fourthj == 0){
-        	a[fourthi][fourthj] = -1;
-        }else{
-        	a[fourthi][fourthj] = 3;
-        }
+		return num;
+	}
+
+	// debug printing
+	public static void printArr(String name, int[][] arr) {
+		System.out.println(name);
+		printArr(arr);
 	}
 
 	public static void printArr(int[][] arr) {
@@ -80,25 +123,34 @@ public class main {
 		}
 	}
 
+
+
+
+	static int[][] spawnShip() {
+		int[][] board = {
+				{-1, -1, -1, -1, -1, -1 ,-1},
+				{-1, 0, 0, 0, 0, 0, -1},
+				{-1, 0, 0, 0, 0, 0, -1},
+				{-1, 0, 0, 0, 0, 0, -1},
+				{-1, 0, 0, 0, 0, 0, -1},
+				{-1, 0, 0, 0, 0, 0, -1},
+				{-1, -1, -1, -1, -1, -1 ,-1}
+		};
+
+		Random r = new Random();
+
+		// r.nextInt(max - min) + min
+		//** Max number is exclusive while min is inclusive **
+
+		board[r.nextInt(3-1) + 1][r.nextInt(3-1) + 1] = 3;
+		board[r.nextInt(3-1) + 1][r.nextInt(6-3) + 3] = 3;
+		board[r.nextInt(6-3) + 3][r.nextInt(3-1) + 1] = 3;
+		board[r.nextInt(6-3) + 3][r.nextInt(6-3) + 3] = 3;
+
+		return board;
+	}
+
 	public static void main(String[] args) {
-		int[][] allies = {
-				{-1, -1, -1, -1, -1, -1 ,-1},
-				{-1, 0, 0, 0, 0, 0, -1},
-				{-1, 0, 0, 0, 0, 0, -1},
-				{-1, 0, 0, 0, 0, 0, -1},
-				{-1, 0, 0, 0, 0, 0, -1},
-				{-1, 0, 0, 0, 0, 0, -1},
-				{-1, -1, -1, -1, -1, -1 ,-1}
-			};
-		int[][] enemies = {
-				{-1, -1, -1, -1, -1, -1 ,-1},
-				{-1, 0, 0, 0, 0, 0, -1},
-				{-1, 0, 0, 0, 0, 0, -1},
-				{-1, 0, 0, 0, 0, 0, -1},
-				{-1, 0, 0, 0, 0, 0, -1},
-				{-1, 0, 0, 0, 0, 0, -1},
-				{-1, -1, -1, -1, -1, -1 ,-1}
-			};
 		String[][] panelName = {
 				{"N", "N", "N", "N", "N", "N" ,"N"},
 				{"N", "A1", "A2", "A3", "A4", "A5", "N"},
@@ -118,17 +170,20 @@ public class main {
 				{-1,  0,  0,  0,  0,  0, -1},
 				{-1, -1, -1, -1, -1, -1, -1},
 		};
-//	int[][] nextMove = {
-//		{-1, -1, -1, -1, -1, -1, -1},
-//		{-1,  5,  5,  5,  5,  5, -1},
-//		{-1,  5,  5,  5,  5,  5, -1},
-//		{-1,  5,  5,  5,  5,  5, -1},
-//		{-1,  5,  5,  5,  5,  5, -1},
-//		{-1,  5,  5,  5,  5,  5, -1},
-//		{-1, -1, -1, -1, -1, -1, -1},
-//	};
+		
+		int[][] moveEq = {
+				{-1, -1, -1, -1, -1, -1, -1},
+				{-1,  0,  0,  0,  0,  0, -1},
+				{-1,  0,  0,  0,  0,  0, -1},
+				{-1,  0,  0,  0,  0,  0, -1},
+				{-1,  0,  0,  0,  0,  0, -1},
+				{-1,  0,  0,  0,  0,  0, -1},
+				{-1, -1, -1, -1, -1, -1, -1},
+		};
+
 		
 		int totalHp;
+		int numSub;
 		String order[] = {"print", "move" ,"attack"};
 		String direction[] = {"North", "South", "West", "East"};
 
@@ -139,13 +194,13 @@ public class main {
 		int moveLength;
 		String To = null;
 		Scanner sc = new Scanner(System.in);
-		
 
-		randomLocation(allies);
-		randomLocation(enemies);
-		totalHp = total(allies);
+		int[][] allies = spawnShip();
+		//int[][] enemies = spawnShip();
 
+		// print initial board
 		print(allies);
+
 		System.out.println("Input print, move, or attack");
 
 		while(sc.hasNextLine()){
@@ -188,159 +243,94 @@ public class main {
 					}
 				}
 
-				printArr(nextMove);
+				printArr("nextMove", nextMove);
+				
+				totalHp = total(allies);
+				numSub = _num(allies);
+				moveEquation(moveEq, totalHp, numSub, nextMove);
+				
+				printArr("moveEq", moveEq);
+				
 				// --- ends nextMove implementation for move
 			}else if(orderInput.equals(order[2])){ // Attack
-				// --- target selection implementation
-				System.out.print("Who (Enemy, Ally): ");
-				String target = sc.nextLine();
-
-				System.out.println("Attacking to: " + target);
-				// --- ends target selection implementation
-
 				System.out.print("To: ");
 				To = sc.nextLine();
 
 				System.out.println("To = " + To);
 				System.out.println(orderInput + " to " + To);
 
-				// Case our team got attacked
-				if(target.equalsIgnoreCase("Ally")){
-					for(int i=1; i<6; i++){
-						for(int j=1; j<6; j++){
+				// **Attacking our team
+				for(int i=1; i<6; i++){
+					for(int j=1; j<6; j++){
 
-							if(To.equals(panelName[i][j])){
-								if(allies[i][j] > 0){
-									allies[i][j]--;
-									System.out.println("命中！");
+						if(To.equals(panelName[i][j])){
+							if(allies[i][j] > 0){
+								allies[i][j]--;
+								System.out.println("命中！");
 
-									// --- nextMove Implementation for attacking
-									nextMove[i][j] = 0; // Set self to 0
+								// --- nextMove Implementation for attacking
+								nextMove[i][j] = 0; // Set self to 0
 
-									// Increments
-									// corner -> 8, top & bot -> 5, normal -> 3
+								// Increments
+								// corner -> 8, top & bot -> 5, normal -> 3
 
-									// Corner
-									if(nextMove[i][j-1] == -1 && nextMove[i-1][j-1] == -1 && nextMove[i-1][j] == -1 || // top left
-									   nextMove[i-1][j] == -1 && nextMove[i-1][j+1] == -1 && nextMove[i][j+1] == -1 || // top right
-									   nextMove[i][j-1] == -1 && nextMove[i+1][j-1] == -1 && nextMove[i+1][j] == -1	|| // bot left
-									   nextMove[i][j+1] == -1 && nextMove[i+1][j+1] == -1 && nextMove[i+1][j] == -1    // bot right
-									) {
-										for (int k = i-1; k <= i+1; k++) {
-											for (int l = j-1; l <= j+1; l++) {
-												if(k != i || l != j) nextMove[k][l] += nextMove[k][l] == -1 ? 0 : 8;
-											}
-										}
-									}
-									// Top Bottom Left Right
-									else if(nextMove[i-1][j] == -1 || nextMove[i+1][j] == -1 || nextMove[i][j-1] == -1 || nextMove[i][j+1] == -1) {
-										for (int k = i-1; k <= i+1; k++) {
-											for (int l = j-1; l <= j+1; l++) {
-												if(k != i || l != j) nextMove[k][l] += nextMove[k][l] == -1 ? 0 : 5;
-											}
-										}
-									}
-									// All other cases
-									else {
-										for (int k = i-1; k <= i+1; k++) {
-											for (int l = j-1; l <= j+1; l++) {
-												if(k != i || l != j) nextMove[k][l] += nextMove[k][l] == -1 ? 0 : 3;
-											}
-										}
-									}
-
-									printArr(nextMove);
-									// --- ends nextMove Implementation for attacking
-
-									if(allies[i][j] == 0){
-										System.out.println("命中！撃沈！");
-									}
-								}else if(allies[i+1][j+1] > 0 || allies[i+1][j] > 0 || allies[i+1][j-1] > 0 || allies[i][j+1] > 0 ||
-										allies[i][j-1] > 0 || allies[i-1][j+1] > 0 || allies[i-1][j] > 0 || allies[i-1][j-1] > 0){ // > 0 means there exist an enemy
-									System.out.println("波高し！");
-								}else{
-									System.out.println("ハズレ！");
-								}
-
-							}
-						}
-					}
-				} else {
-					// Attacking enemy
-					for(int i=1; i<6; i++){
-						for(int j=1; j<6; j++){
-
-							if(To.equals(panelName[i][j])){
-								if(enemies[i][j] > 0){
-									enemies[i][j]--;
-									System.out.println("命中！");
-
-									if(enemies[i][j] == 0){
-										System.out.println("命中！撃沈！");
-									}
-
-									// Set target to 20 when direct hit (attacking enemy)
-									nextMove[i][j] = 20;
-								}else if(enemies[i+1][j+1] > 0 || enemies[i+1][j] > 0 || enemies[i+1][j-1] > 0 || enemies[i][j+1] > 0 ||
-										enemies[i][j-1] > 0 || enemies[i-1][j+1] > 0 || enemies[i-1][j] > 0 || enemies[i-1][j-1] > 0){ // > 0 means there exist an enemy
-									System.out.println("波高し！");
-
-									// Set target to 0 when near hit and increase surroundings (attacking enemy)
-									nextMove[i][j] = 0;
-
-									// --- nextMove Implementation for attacking
-									nextMove[i][j] = 0; // Set self to 0
-
-									// Increments
-									// corner -> 8, top & bot -> 5, normal -> 3
-
-									// Corner
-									if(nextMove[i][j-1] == -1 && nextMove[i-1][j-1] == -1 && nextMove[i-1][j] == -1 || // top left
-											nextMove[i-1][j] == -1 && nextMove[i-1][j+1] == -1 && nextMove[i][j+1] == -1 || // top right
-											nextMove[i][j-1] == -1 && nextMove[i+1][j-1] == -1 && nextMove[i+1][j] == -1	|| // bot left
-											nextMove[i][j+1] == -1 && nextMove[i+1][j+1] == -1 && nextMove[i+1][j] == -1    // bot right
-									) {
-										for (int k = i-1; k <= i+1; k++) {
-											for (int l = j-1; l <= j+1; l++) {
-												if(k != i || l != j) nextMove[k][l] += nextMove[k][l] == -1 ? 0 : 8;
-											}
-										}
-									}
-									// Top Bottom Left Right
-									else if(nextMove[i-1][j] == -1 || nextMove[i+1][j] == -1 || nextMove[i][j-1] == -1 || nextMove[i][j+1] == -1) {
-										for (int k = i-1; k <= i+1; k++) {
-											for (int l = j-1; l <= j+1; l++) {
-												if(k != i || l != j) nextMove[k][l] += nextMove[k][l] == -1 ? 0 : 5;
-											}
-										}
-									}
-									// All other cases
-									else {
-										for (int k = i-1; k <= i+1; k++) {
-											for (int l = j-1; l <= j+1; l++) {
-												if(k != i || l != j) nextMove[k][l] += nextMove[k][l] == -1 ? 0 : 3;
-											}
-										}
-									}
-								}else{
-									System.out.println("ハズレ！");
-
-									// Set target + surroundings to 0 when miss
+								// Corner
+								if(nextMove[i][j-1] == -1 && nextMove[i-1][j-1] == -1 && nextMove[i-1][j] == -1 || // top left
+								   nextMove[i-1][j] == -1 && nextMove[i-1][j+1] == -1 && nextMove[i][j+1] == -1 || // top right
+								   nextMove[i][j-1] == -1 && nextMove[i+1][j-1] == -1 && nextMove[i+1][j] == -1	|| // bot left
+								   nextMove[i][j+1] == -1 && nextMove[i+1][j+1] == -1 && nextMove[i+1][j] == -1    // bot right
+								) {
 									for (int k = i-1; k <= i+1; k++) {
 										for (int l = j-1; l <= j+1; l++) {
-											nextMove[k][l] = 0;
+											if(k != i || l != j) nextMove[k][l] += nextMove[k][l] == -1 ? 0 : 8;
+										}
+									}
+								}
+								// Top Bottom Left Right
+								else if(nextMove[i-1][j] == -1 || nextMove[i+1][j] == -1 || nextMove[i][j-1] == -1 || nextMove[i][j+1] == -1) {
+									for (int k = i-1; k <= i+1; k++) {
+										for (int l = j-1; l <= j+1; l++) {
+											if(k != i || l != j) nextMove[k][l] += nextMove[k][l] == -1 ? 0 : 5;
+										}
+									}
+								}
+								// All other cases
+								else {
+									for (int k = i-1; k <= i+1; k++) {
+										for (int l = j-1; l <= j+1; l++) {
+											if(k != i || l != j) nextMove[k][l] += nextMove[k][l] == -1 ? 0 : 3;
 										}
 									}
 								}
 
+								printArr("nextMove", nextMove);
+								// --- ends nextMove Implementation for attacking
+
+								totalHp = total(allies);
+								numSub = _num(allies);
+								moveEquationAr(moveEq, i, j, totalHp, numSub, nextMove);
+
+								printArr("moveEq", moveEq);
+
+								if(allies[i][j] == 0){
+									System.out.println("命中！撃沈！");
+								}
+							}else if(allies[i+1][j+1] > 0 || allies[i+1][j] > 0 || allies[i+1][j-1] > 0 || allies[i][j+1] > 0 ||
+									allies[i][j-1] > 0 || allies[i-1][j+1] > 0 || allies[i-1][j] > 0 || allies[i-1][j-1] > 0){ // > 0 means there exist an enemy
+								System.out.println("波高し！");
+								totalHp = total(allies);
+								numSub = _num(allies);
+								moveEquation(moveEq, totalHp, numSub, nextMove);
+							}else{
+								System.out.println("ハズレ！");
+								totalHp = total(allies);
+								numSub = _num(allies);
+								moveEquation(moveEq, totalHp, numSub, nextMove);
 							}
+
 						}
 					}
-
-					System.out.println("Attacked Enemy");
-					printArr(nextMove);
 				}
-
 			}else{
 				System.out.println("Error : Input proper order!");
 			}
