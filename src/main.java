@@ -254,16 +254,16 @@ public class Main {
 				dir = "西";
 			}
 
-			// board[maxCol][maxRow] -> target
+			// board[maxRow][maxCol] -> target
 
-			if(board[maxCol][maxRow] == 0) {
+			if(board[maxRow][maxCol] == 0) {
 				board[maxRow][maxCol] = board[shipRow][shipCol];
 				board[shipRow][shipCol] = 0;
 
 				// swap moveEq as well when moving ship
 				int temp = moveEq[shipRow][shipCol];
-				moveEq[shipRow][shipCol] = moveEq[maxCol][maxCol];
-				moveEq[maxCol][maxCol] = temp;
+				moveEq[shipRow][shipCol] = moveEq[maxRow][maxCol];
+				moveEq[maxRow][maxCol] = temp;
 
 				System.out.println("『潜水艦を" + dir + "に" + Math.abs(dist) + "マス移動！ 』");
 			} else {
@@ -421,7 +421,24 @@ public class Main {
 		String To = null;
 		Scanner sc = new Scanner(System.in);
 
-		int[][] allies = spawnShip();
+		// TODO: Spawn
+
+		// Hardcode position
+		int[][] allies = {
+				{-1, -1, -1, -1, -1, -1, -1},
+				{-1,  0,  3,  0,  0,  0, -1},
+				{-1,  0,  0,  0,  0,  3, -1},
+				{-1,  3,  0,  0,  0,  0, -1},
+				{-1,  0,  0,  0,  0,  0, -1},
+				{-1,  0,  0,  0,  3,  0, -1},
+				{-1, -1, -1, -1, -1, -1, -1},
+		};
+
+		//int[][] allies = spawnShip();
+
+		// END Spawn
+
+
 		//int[][] enemies = spawnShip();
 
 		while(true) {
